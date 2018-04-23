@@ -3,29 +3,24 @@
  * 
  */
 let loginPage = `
-    <section class="section">
+    <section class="section" style="padding-top: 0;">
         <div class="container box">
-            <h1 class="title">
-                Welcome to light wallet
+            <h1 class="subtitle">
+                Send Lumens Using Stellar Lightweight Client
             </h1>
             <div class="columns">
                 <div class="column is-one-third">
                     <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
-                            <input id="seed" class="input" type="text" placeholder="Text input">
+                            <input id="seed" class="input" type="text" placeholder="Example: SCHKBJ............ZLJ7">
                         </div>
                     </div>
                     <div class="field">
                         <div class="control">
-                            <button onclick="login()" class="button">Unlock</button>
+                            <button onclick="login()" class="button is-primary">Sign In</button>
                         </div>
                      </div>
-                </div>
-                <div class="column is-one-third">
-                    <h3 class="subtitle">
-                        Unlock your account in order to  send lumens...
-                    </h3>
                 </div>
             </div>
 
@@ -39,33 +34,59 @@ let loginPage = `
  * @param {any} number 
  */
 let loggedInPage = (key, number) => `
-    <section class="section">
+    <section class="section" style="padding-top: 0;">
         <div class="container box">
-            <h1 class="title">
-                You have been logged in!
-            </h1>
-            <h2 class="subtitle">
-                Your public key ${key}
+            <h2 class="title">
+                Your balance
             </h2>
-        </div>
-        <div class="container box">
-            <h1 class="title">
-                Balance
-            </h1>
             <h2 id="balance" class="subtitle">
             </h2>
-        </div>
-        <div class="container box">
-            <h1 class="title">
-                Number of transactions
-            </h1>
-            <p>${number}</p>
+            <h2 class="title">
+                Your Stellar Public Key
+            </h2>
+            <h2 class="subtitle">
+                ${key}
+            </h2>
+            <hr>
+            <div>
+                <h2 class="subtitle">
+                    Send Lumens
+                </h2>
+                <div class="columns">
+                    <div class="column is-one-third">
+                        <div class="field">
+                            <label class="label">To</label>
+                            <div class="control">
+                                <input id="seed" class="input" type="text" placeholder="Example: SCHKBJ............ZLJ7">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Amount</label>
+                            <div class="control">
+                                <input id="seed" class="input" type="text" placeholder="Amount">
+                            </div>
+                        </div>                        
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-primary">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+            <hr>
+            <h2 class="title">
+                Transaction History
+            </h2>
+            <div id="transactions" class="content">
+            </div>
         </div>
 
     </section>   
 `
 /**
  * Check the balance of account 
+ * We are only checking for lumens currently
  * 
  * @param {any} key 
  */
@@ -73,8 +94,8 @@ let getBalance = (key) => {
     server.loadAccount(key).then(acc => {
         acc.balances.forEach( balance => {
             if (balance.asset_type === 'native') {
-                document.getElementById('balance').innerHTML = `${balance.balance} XLM`
-                console.log(`XLM : ${balance.balance}}`)
+                document.getElementById('balance').innerHTML = `${balance.balance.substring(0, balance.balance.length - 5)} XLM`
+                console.log(`XLM : ${balance.balance}`)
             }
         })
     })
@@ -88,8 +109,14 @@ let getBalance = (key) => {
  */
 let renderLoggedInPage = (secretSeed) => {
     let publicKey = keypairFromSecret(secretSeed).publicKey()
-    let noTx = server.transactions().forAccount(publicKey).call().then(page => 
-        document.getElementById('app').innerHTML = loggedInPage(publicKey, page.records.length)).then(getBalance(publicKey))
+    let noTx = server.transactions().forAccount(publicKey).call().then(page => {
+        document.getElementById('app').innerHTML = loggedInPage(publicKey, page.records.length)
+        page.records.forEach(key => {
+            document.getElementById('transactions').innerHTML += `<p><a href="http://testnet.stellarchain.io/tx/${key.hash}" target="_blank">${key.hash}</a></p>`
+        })
+    }).then(log => {
+        getBalance(publicKey)
+    })
 }
 /**
  * Login method calls renderLoggedInPage and adds signout button
@@ -129,4 +156,4 @@ let keypairFromSecret = (secret) => {
 */
 document.getElementById('app').innerHTML = loginPage
 let stellar = StellarSdk
-let server = new stellar.Server('https://horizon-testnet.stellar.org')
+let server = new stellar.Server('http://13.74.42.19:8000', {allowHttp: true})

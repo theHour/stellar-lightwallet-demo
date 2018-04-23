@@ -9,21 +9,53 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/0.8.0/stellar-sdk.js"></script>
 </head>
+<style>
+    html {
+        background-color: #eeeeee;
+    }
+</style>
 <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="https://stellar.org">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfsWlzm7fJAJJcwlXeYldzbJ4jFJW4rxq4KWpc-1GK3xlCb8Hl5A" alt="Bulma: a modern CSS framework based on Flexbox" >
-          </a>
-        </div>
-        <div class="navbar-end">
-            <div id="signout" class="navbar-item">
+    <div class="container">
+        <nav style="background-color: transparent" class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+              <a class="navbar-item" href="https://stellar.org" target="_blank">
+                <img src="./img/stellar-rocket.png" alt="Bulma: a modern CSS framework based on Flexbox" height="50">
+              </a>
             </div>
-        </div>
-    </nav>
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <div class="navbar-item">
+                        <span>
+                            |
+                        </span>
+                    </div>
+                    <div class="navbar-item">
+                        <h2 class="subtitle">
+                            Stellar Lightweight Client
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-end">
+                <div id="signout" class="navbar-item">
+                </div>
+            </div>
+        </nav>
+    </div>
     <div id="app">
 
     </div>
+    <footer class="footer">
+            <div class="container">
+              <div class="content has-text-centered">
+                <p>
+                  <strong>Bulma</strong> by <a href="https://jgthms.com">Jeremy Thomas</a>. The source code is licensed
+                  <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
+                  is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+                </p>
+              </div>
+            </div>
+    </footer>
     <script src="./js/index.js"></script>
 </body>
 </html>
